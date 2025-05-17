@@ -68,18 +68,24 @@ export default function DataProduksiMesin() {
     const ws = XLSX.utils.json_to_sheet(templateData);
     XLSX.utils.book_append_sheet(wb, ws, "Template");
 
-    // Add validation instructions as a second sheet
-    const instructions = [
-      ["Kolom Wajib Diisi"],
-      ["Tanggal: Format YYYY-MM-DD"],
-      ["Shift: day (06:00-18:00) atau night (18:01-05:59)"],
-      ["Nama Mesin: Harus sesuai dengan mesin yang terdaftar"],
-      ["Output: Angka bulat > 0"],
-      ["Reject Rate: Angka bulat >= 0"],
-      ["Downtime: Angka >= 0 (dalam jam)"],
+    // Add extruder list as a third sheet
+    const extruderList = [
+      ["StandartId", "Extruder Name"],
+      ["681299d61bd769f2bc944f2c", "Extruder 1"],
+      ["681299e81bd769f2bc944f33", "Extruder 2"],
+      ["68143c1b19c62230a0f13240", "Extruder 3"],
+      ["68145f386919b84dbfdf84ec", "Extruder 4"],
+      ["68185c5d8b091a78d764f28b", "Extruder 5"],
+      ["68185c9ae9f995fc842615bd", "Extruder 6"],
+      ["68185d56e9f995fc842615c3", "Extruder 7"],
+      ["68185d748b091a78d764f290", "Extruder 8"],
+      ["68185d91e9f995fc842615c8", "Extruder 9"],
+      ["68185e188b091a78d764f295", "Extruder 10"],
+      ["68185e35e9f995fc842615ce", "Extruder 11"],
+      ["681dc56f19784284d07febdd", "Extruder 12"],
     ];
-    const ws2 = XLSX.utils.aoa_to_sheet(instructions);
-    XLSX.utils.book_append_sheet(wb, ws2, "Petunjuk");
+    const ws3 = XLSX.utils.aoa_to_sheet(extruderList);
+    XLSX.utils.book_append_sheet(wb, ws3, "Daftar Extruder");
 
     XLSX.writeFile(wb, "Template_Import_Produksi.xlsx");
   };
