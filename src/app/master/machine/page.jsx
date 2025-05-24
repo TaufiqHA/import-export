@@ -52,11 +52,14 @@ export default function DataProduksiMesin() {
   const [validationErrors, setValidationErrors] = useState([]);
   const [isLoadingImport, setIsLoadingImport] = useState(false);
 
+  // add newStandar and setNewStandar
+  const [newStandar, setNewStandar] = useState([]);
+
   // Add this function for Excel template download
-  const downloadTemplate = () => {
+  const downloadTemplate = async () => {
     const templateData = [
       {
-        standartId: "",
+        standarId: "",
         output: "",
         rejectRate: "",
         downtime: "",
@@ -68,22 +71,26 @@ export default function DataProduksiMesin() {
     const ws = XLSX.utils.json_to_sheet(templateData);
     XLSX.utils.book_append_sheet(wb, ws, "Template");
 
+    try {
+      const res = await fetch("/api/standar");
+      const data = await res.json();
+
+      if (res.ok) {
+        // Ubah ke format array 2 dimensi seperti extruderList
+        const formatted = [
+          ["StandarId", "Extruder Name"],
+          ...data.data.map((item) => [item._id, item.name]),
+        ];
+        setNewStandar(formatted);
+      } else {
+        console.error("response tidak ok");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     // Add extruder list as a third sheet
-    const extruderList = [
-      ["StandartId", "Extruder Name"],
-      ["681299d61bd769f2bc944f2c", "Extruder 1"],
-      ["681299e81bd769f2bc944f33", "Extruder 2"],
-      ["68143c1b19c62230a0f13240", "Extruder 3"],
-      ["68145f386919b84dbfdf84ec", "Extruder 4"],
-      ["68185c5d8b091a78d764f28b", "Extruder 5"],
-      ["68185c9ae9f995fc842615bd", "Extruder 6"],
-      ["68185d56e9f995fc842615c3", "Extruder 7"],
-      ["68185d748b091a78d764f290", "Extruder 8"],
-      ["68185d91e9f995fc842615c8", "Extruder 9"],
-      ["68185e188b091a78d764f295", "Extruder 10"],
-      ["68185e35e9f995fc842615ce", "Extruder 11"],
-      ["681dc56f19784284d07febdd", "Extruder 12"],
-    ];
+    const extruderList = newStandar;
     const ws3 = XLSX.utils.aoa_to_sheet(extruderList);
     XLSX.utils.book_append_sheet(wb, ws3, "Daftar Extruder");
 
